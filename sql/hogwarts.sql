@@ -318,30 +318,77 @@ WHERE loja = 'Dedosdemel';
 
 
 
+
 -- =====================================================================
 -- 3. REMOÇÃO DE DADOS (DELETE) E TESTES DE RESTRIÇÕES
 -- =====================================================================
+
 -- Questão 13
+-- DELETE FROM casa
+-- WHERE nome_casa = 'Sonserina';
 -- Erro:
+-- Código: 1451
+-- Mensagem: Cannot delete or update a parent row:
+-- a foreign key constraint fails.
 -- Explicação:
+-- A casa não pode ser excluída porque existem
+-- alunos e professores vinculados a ela.
 
 -- Questão 14
+-- INSERT INTO aluno (nome, ano_escolar, id_casa)
+-- VALUES ('Dobby', 8, 1);
 -- Erro:
+-- Código: 3819
+-- Mensagem: Check constraint
+-- 'chk_aluno_ano' is violated.
 -- Explicação:
+-- O ano escolar deve estar entre 1 e 7,
+-- conforme a restrição CHECK da tabela aluno.
 
 -- Questão 15
+-- INSERT INTO aluno (nome, ano_escolar, id_casa, email)
+-- VALUES ('Harry Potter (Polissuco)', 5, 1,
+-- 'harry.potter@hogwarts.edu');
 -- Erro:
+-- Código: 1062
+-- Mensagem: Duplicate entry
+-- 'harry.potter@hogwarts.edu' for key 'uq_aluno_email'.
 -- Explicação:
+-- O e-mail já pertence ao Harry Potter,
+-- violando a restrição UNIQUE da tabela aluno.
 
 -- Questão 16
+-- DELETE FROM professor
+-- WHERE nome = 'Severo Snape';
 -- Erro:
+-- Código: 1451
+-- Mensagem: Cannot delete or update a parent row:
+-- a foreign key constraint fails.
 -- Explicação:
+-- Snape não pode ser excluído porque existem
+-- disciplinas e registros vinculados a ele.
 
 -- Questão 17
+DELETE FROM professor
+WHERE nome = 'Gilderoy Lockhart';
 
 -- Questão 18
+DELETE FROM matricula
+WHERE id_aluno IN (
+    SELECT id_aluno
+    FROM aluno
+    WHERE nome = 'Vicente Crabbe'
+);
+
+DELETE FROM aluno
+WHERE nome = 'Vicente Crabbe';
 
 -- Questão 19
+DELETE FROM disciplina
+WHERE id_disc NOT IN (
+    SELECT id_disc
+    FROM matricula
+);
 
 
 -- =====================================================================
