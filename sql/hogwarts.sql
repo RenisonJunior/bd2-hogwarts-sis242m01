@@ -53,7 +53,6 @@ CREATE TABLE disciplina (
                                     CONSTRAINT fk_disciplina_professor
                                             FOREIGN KEY (id_prof) REFERENCES professor(id_prof)
                                             );
-)
 
 
 
@@ -92,7 +91,6 @@ CREATE TABLE matricula (
                                                 CONSTRAINT fk_matricula_disciplina
                                                         FOREIGN KEY (id_disc) REFERENCES disciplina(id_disc)
                                                         );
-)
 
 -- Tabela registro_pontos
 
@@ -301,11 +299,23 @@ SET situacao = CASE
     WHEN nota >= 6 THEN 'Aprovado'
         ELSE 'Reprovado'
         END;
+
 -- Questão 10
+UPDATE professor
+SET salario = salario * 1.10
+WHERE id_casa IS NOT NULL
+AND data_admissao < '1980-01-01';
 
 -- Questão 11
+UPDATE produto
+SET ativo = 'N'
+WHERE estoque = 0;
 
 -- Questão 12
+UPDATE produto
+SET preco = preco * 0.80
+WHERE loja = 'Dedosdemel';
+
 
 
 -- =====================================================================
