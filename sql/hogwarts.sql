@@ -605,15 +605,98 @@ SELECT * FROM log_auditoria;
 -- 5. CONTROLE DE TRANSAÇÕES (TCL)
 -- =====================================================================
 -- Questão 26
+START TRANSACTION;
+
+UPDATE aluno
+SET saldo_galeoes = saldo_galeoes - 50
+WHERE nome = 'Draco Malfoy';
+
+UPDATE aluno
+SET saldo_galeoes = saldo_galeoes + 50
+WHERE nome = 'Pansy Parkinson';
+
+COMMIT;
+
+SELECT nome, saldo_galeoes
+FROM aluno
+WHERE nome IN ('Draco Malfoy', 'Pansy Parkinson');
 
 -- Questão 27
+START TRANSACTION;
+
+UPDATE casa
+SET pontos = 0;
+
+SELECT nome_casa, pontos
+FROM casa;
+
+ROLLBACK;
+
+SELECT nome_casa, pontos
+FROM casa;
 
 -- Questão 28
+START TRANSACTION;
+
+INSERT INTO compra
+(id_aluno, id_produto, quantidade, data_compra)
+VALUES (1, 1, 1, '2026-11-10');
+
+SELECT nome, saldo_galeoes
+FROM aluno
+WHERE id_aluno = 1;
+
+SELECT nome_produto, estoque
+FROM produto
+WHERE id_produto = 1;
+
+ROLLBACK;
+
+SELECT nome, saldo_galeoes
+FROM aluno
+WHERE id_aluno = 1;
+
+SELECT nome_produto, estoque
+FROM produto
+WHERE id_produto = 1;
 
 -- Questão 29
+START TRANSACTION;
+
+INSERT INTO registro_pontos
+(id_aluno, id_prof, pontos, motivo, data_registro)
+VALUES
+(12, 4, 15, 'Cuidou das estufas no feriado', '2026-11-10');
+
+SAVEPOINT sp_pontos_legitimos;
+
+INSERT INTO registro_pontos
+(id_aluno, id_prof, pontos, motivo, data_registro)
+VALUES
+(6, 2, 100, 'Favoritismo descarado', '2026-11-10');
+
+ROLLBACK TO SAVEPOINT sp_pontos_legitimos;
+
+COMMIT;
+
+SELECT nome_casa, pontos
+FROM casa
+ORDER BY pontos DESC;
+
+SELECT COUNT(*) AS total_registros
+FROM registro_pontos;
 
 -- Questão 30
+SELECT @@autocommit;
+
 -- Resposta:
+-- O valor 1 indica que o autocommit está ativado,
+-- confirmando automaticamente os comandos fora
+-- de uma transação explícita.
+-- O valor 0 indica que o autocommit está desativado.
+-- Um CREATE TABLE provoca um COMMIT implícito,
+-- confirmando a transação aberta antes de criar
+-- a tabela, mesmo sem executar COMMIT manualmente.
 
 
 -- =====================================================================
